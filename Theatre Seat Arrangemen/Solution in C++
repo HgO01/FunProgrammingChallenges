@@ -1,0 +1,221 @@
+#include <iostream>
+
+using namespace std;
+
+
+//constant global variables
+const int R_SIZE = 15;
+const int C_SIZE = 30;
+
+
+//////////////////////////////
+
+//It displays the prices
+//list
+
+////////////////////////////
+void display_prices(float arr[])
+{
+    int i= 0;
+    while(i < R_SIZE)
+    {
+        //cout<<"Enter row "<<i+1<<" price: ";
+        cout<< "Row " << i+1<<" cost: ";
+        cout<<arr[i]<<"$"<<endl;
+        i++;
+    }
+}
+
+////////////////////////////////////
+
+// Enables the user/organizers to
+// To input row prices
+////////////////////////////////////
+void get_rows_price(float arr[])
+{
+    int i =0;
+    while(i<R_SIZE)
+    {
+        cout<<"Enter row "<<i+1<<" price: ";
+        cin>> arr[i];
+        i++;
+    }
+}
+
+
+/////////////////////////////
+// Display free an Occupied
+// seat.
+////////////////////////////
+void display_seat_map(char arr[][C_SIZE])
+{
+    for(int i=0; i<R_SIZE; i++)
+    {
+        for(int j=0; j<C_SIZE; j++)
+            cout<<arr[i][j]<<" ";
+
+        cout<<"\n";
+    }
+}
+
+////////////////////////////////////////
+// Enables the organzer to
+// represent free space as '*'
+//////////////////////////////////////
+void empty_seat(char arr[][C_SIZE])
+{
+    //initialized to *
+    for(int i=0; i<R_SIZE; i++)
+    {
+        for(int j=0; j<C_SIZE; j++)
+            arr[i][j] = '*';
+    }
+}
+
+///////////////////////////////////////////////////////
+
+// Enables customer to book seat by
+// row-column seat location
+//////////////////////////////////////////////////////
+
+void book_by_num(int row, int col, char arr[][C_SIZE])
+{
+    //first check if the position is free
+    if(arr[row-1][col-1]!= '*')
+    {
+        cout<<"Seat already booked: "<<endl;
+    }
+
+    //else
+    else{
+        arr[row-1][col-1] = '#'; //boook
+    }
+
+}
+
+////////////////////////////////////////////////////
+//  Allows customer book seat based on input
+//  listed prices by the organizers
+////////////////////////////////////////////////////
+
+void book_by_prices(float price, float arr[], char s_arr[][C_SIZE])
+{
+    //check for unbooked space that worth the price
+        //them assign customer there
+
+    //check price matches
+    int i, R;
+    for(i=0; i<R_SIZE; i++)
+    {
+        if(arr[i] == price){
+            R = i;
+            break;
+        }
+
+    }
+
+    //check any posible available space them update
+    for( i=0; i<C_SIZE; i++)
+    {
+        if(s_arr[R][i] !='#') //is free
+        {
+            s_arr[R][i] = '#'; // fixed
+            return;
+        }
+    }
+
+    cout<<"No free space available in"<<R+1<<endl;
+
+}
+
+
+/////////////////////////////////////////////
+//  Show the customer the list of option
+//  for booking a seating
+/////////////////////////////////////////////
+int booking_method()
+{
+    int method;
+
+
+    cout<< "\t\tMethod of Booking"<<endl;
+
+    cout<< "1.\t Row-Column Method\n";
+
+    cout<< "2.\t Seat price method\n";
+
+    cout<<"Enter booking method; ";
+    cin>>method;
+
+    return method;
+}
+
+/////////////////////////////////////////
+//  Welcome the customer to the
+//  Show/program
+///////////////////////////////////////
+void greetings()
+{
+    cout<<"Welcome to IPW ver23\n";
+}
+
+
+
+//////////////////////////////////////
+// Main
+////////////////////////////////////
+int main()
+{
+    float seat_price[R_SIZE];
+
+    char seat_arr[R_SIZE][C_SIZE];
+
+
+    //enter the prices for the rows
+    get_rows_price(seat_price);
+
+    empty_seat(seat_arr); // empty seats
+
+    greetings(); //greet the customer
+
+    char reply;
+
+    //to prompt for the order made
+    do{
+        cout<<"Are you here for the performance(y/Y - yes):";
+        cin>>reply;
+
+        cout<<"\n\nAvailable ticket prices and packages are: "<<endl;
+        display_prices(seat_price);
+
+        cout<<"\n";
+
+        cout<<"Available seats are: \n";
+        display_seat_map(seat_arr);
+
+        int method = booking_method();
+
+        if(method == 1){
+            int C, R;
+            cout<<"Enter the seat position(ROW and COLUMN): ";
+            cin>>R>>C;
+            book_by_num(R,C,seat_arr);
+            //display_seat_map(seat_arr);
+        }
+
+        else if(method ==2)
+        {
+            float price;
+            cout<<"Enter your subscription price: ";
+            cin>>price;
+            book_by_prices(price, seat_price, seat_arr);
+        }
+
+
+
+    }while(reply == 'Y'|| reply =='y');
+
+
+
+    return 0;
+}
